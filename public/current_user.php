@@ -4,8 +4,8 @@ include("../rowing/backend/inc/common.php");
 include("utils.php");
 $r=["id"=>"0","name"=>"Ikke logget ind"];
 $pf=explode('.',$_SERVER['REMOTE_ADDR'])[0];
-$r["local"]=( $pf=="127" || $pf=="10");
-
+$r["local"]=( $pf=="127" || $pf=="10" || $_SERVER['REMOTE_ADDR']=="217.74.223.245" || isset($_GET["dsrmode"]));
+$r["debug"]=print_r($_GET,true);
 if (isset($_SERVER['PHP_AUTH_USER'])) {
     $cuser=$_SERVER['PHP_AUTH_USER'];
     // error_log("CU public c=$cuser");
