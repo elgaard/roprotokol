@@ -16,11 +16,14 @@ Member LEFT JOIN
     CAST(Sum(Meter) AS UNSIGNED) AS distance,
     CAST(SUM(IF(season.summer_start<OutTime AND season.summer_end>OutTime,Meter,0)) AS UNSIGNED) AS summer,
     rm.id as member_id, rm.MemberID
-    FROM season,Trip,TripMember,Member rm
+    FROM season,Trip,TripMember,Member rm,BoatType,Boat
     WHERE
+      BoatType.Name=Boat.boat_type AND
+      Boat.id=Trip.BoatID AND
       rm.id = TripMember.member_id AND
       Trip.id = TripMember.TripID AND
       season.season=Year(OutTime) AND
+      ((BoatType.boat_class) !='motor') AND
       Year(OutTime)=YEAR(NOW())
      GROUP BY rm.MemberID
   )  as im
@@ -39,6 +42,4 @@ ORDER by rank ASC";
 
 $rostat=$rodb->query($ranksql) or dbErr($rodb,$res,"ro event stats");
 process($rostat);
-
-
 $rodb->close();
